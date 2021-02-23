@@ -3,19 +3,21 @@
   "description": "Simple, light-weight WebRTC video/voice and data channels",
   "version": "1.0.0",
   "author": {
-    "name": "Gregor Mitscha-Baude",
-    "email": "gregor.mitscha-baude@gmx.at"
+    "name": "BMZ"
   },
   "bugs": {
     "url": "https://github.com/mitschabaude/simple-peer-light/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "eventemitter3": "^4.0.7"
+  },
   "devDependencies": {
     "airtap": "^3.0.0",
     "babel-minify": "^0.5.1",
     "bowser": "^2.11.0",
     "browserify": "^17.0.0",
     "coveralls": "^3.1.0",
+    "esbuild": "^0.8.51",
     "nyc": "^15.1.0",
     "prettier-bytes": "^1.0.4",
     "simple-get": "^4.0.0",
@@ -43,12 +45,13 @@
     "webrtc stream"
   ],
   "license": "MIT",
-  "main": "index.js",
+  "main": "simple-peer-light.min.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mitschabaude/simple-peer-light.git"
+    "url": "git://github.com/bmz1/simple-peer-light.git"
   },
   "scripts": {
+    "build:esm": "esbuild index.js --bundle --minify --sourcemap --target=chrome58,firefox57,safari11,edge16 --outfile=simple-peer-light.min.js",
     "build": "minify index.js --sourceType module --outFile simplepeer.min.js",
     "build-browserify": "browserify -s SimplePeer -r . | minify > simplepeer.min.js",
     "size": "npm run build && cat simplepeer.min.js | gzip | wc -c",

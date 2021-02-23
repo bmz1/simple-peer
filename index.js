@@ -1,4 +1,7 @@
 /*! simple-peer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+import EventEmitter from 'eventemitter3';
+
 const MAX_BUFFERED_AMOUNT = 64 * 1024
 const ICECOMPLETE_TIMEOUT = 5 * 1000
 const CHANNEL_CLOSING_TIMEOUT = 5 * 1000
@@ -53,10 +56,8 @@ function warn (message) {
  * WebRTC peer connection.
  * @param {Object} opts
  */
-class Peer {
+class Peer extends EventEmitter {
   constructor (opts = {}) {
-    this._map = new Map() // for event emitter
-
     this._id = randombytes(4).toString('hex').slice(0, 7)
     this._doDebug = opts.debug
     this._debug('new peer %o', opts)
@@ -1088,41 +1089,6 @@ class Peer {
     if (!this._doDebug) return
     args[0] = '[' + this._id + '] ' + args[0]
     console.log(...args)
-  }
-
-  // event emitter
-  on (key, listener) {
-    const map = this._map
-    if (!map.has(key)) map.set(key, new Set())
-    map.get(key).add(listener)
-  }
-
-  off (key, listener) {
-    const map = this._map
-    const listeners = map.get(key)
-    if (!listeners) return
-    listeners.delete(listener)
-    if (listeners.size === 0) map.delete(key)
-  }
-
-  once (key, listener) {
-    const listener_ = (...args) => {
-      this.off(key, listener_)
-      listener(...args)
-    }
-    this.on(key, listener_)
-  }
-
-  emit (key, ...args) {
-    const map = this._map
-    if (!map.has(key)) return
-    for (const listener of map.get(key)) {
-      try {
-        listener(...args)
-      } catch (err) {
-        console.error(err)
-      }
-    }
   }
 }
 
