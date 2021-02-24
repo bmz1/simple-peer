@@ -51,7 +51,7 @@
     "url": "git://github.com/bmz1/simple-peer-light.git"
   },
   "scripts": {
-    "build:esm": "esbuild index.js --bundle --minify --sourcemap --target=chrome58,firefox57,safari11,edge16 --outfile=simple-peer-light.min.js",
+    "build:esm": "esbuild index.js --bundle --minify --sourcemap --main-fields=module --platform=neutral --target=es2020 --outfile=simple-peer-light.min.js",
     "build": "minify index.js --sourceType module --outFile simplepeer.min.js",
     "build-browserify": "browserify -s SimplePeer -r . | minify > simplepeer.min.js",
     "size": "npm run build && cat simplepeer.min.js | gzip | wc -c",
