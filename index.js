@@ -58,6 +58,7 @@ function warn (message) {
  */
 class Peer extends EventEmitter {
   constructor (opts = {}) {
+    super();
     this._id = randombytes(4).toString('hex').slice(0, 7)
     this._doDebug = opts.debug
     this._debug('new peer %o', opts)
@@ -723,6 +724,11 @@ class Peer extends EventEmitter {
       this._pcReady = true
       this._maybeReady()
     }
+
+    if (iceConnectionState === 'disconnected') {
+      this.emit('disconnect');
+    }
+
     if (iceConnectionState === 'failed') {
       this.destroy(
         errCode(
